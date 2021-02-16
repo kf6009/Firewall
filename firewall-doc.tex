@@ -1,0 +1,346 @@
+%% Dr Alun Moon
+%% assignment-template.tex, generated from assignment-template.dtx
+\documentclass[12pt]{article}
+\usepackage[british]{babel}
+
+\usepackage{url}
+\usepackage[round]{natbib}
+\usepackage{infoboxes}
+
+\usepackage{latexsym}
+\usepackage{tlatex}
+\usepackage{color}
+\definecolor{boxshade}{gray}{.8}
+\setboolean{shading}{true}
+
+\usepackage{enumerate,
+            siunitx}
+
+\begin{document}
+\begin{abstract}
+	This is one of the more complex specifications,  the catch is that most of
+	the complexity is in the model!
+\end{abstract}
+
+\section{Simple Firewall}
+\subsection{The Specification} 
+\begin{tla}
+------------------------------ MODULE Firewall ------------------------------
+EXTENDS Naturals
+CONSTANT AcceptList,
+         RejectList,
+         Protocols,
+         IPs,
+         Ports
+
+VARIABLE forwarded \* packets forwarded on through the firewall
+----
+Address == [ ip:IPs, port:Ports ] \* address has port and ip
+
+(*
+A Packet has a source and destination address,
+and a protocol
+*)
+Packet  == [ source:Address,
+             dest:Address,
+             protocol: Protocols ]
+
+Rule == [ Packet -> BOOLEAN ] \* A Rule maps from packets to boolean values
+----
+Init == forwarded = {}
+
+Reject(p) ==
+    \E rule \in AcceptList :
+        /\ rule[p]
+
+Accept(p) ==
+    \E rule \in RejectList :
+        /\ rule[p]
+
+Firewall(p) == \* Firewall acts on a packet
+    IF Accept(p)/\\lnot Reject(p) 
+    THEN forwarded' = forwarded \union {p}
+    ELSE UNCHANGED forwarded
+    
+Next ==
+    \E packet \in Packet : Firewall(packet)
+
+=============================================================================
+\* Modification History
+\* Last modified Tue Feb 16 16:16:29 GMT 2021 by alunm
+\* Created Sat Feb 13 18:27:34 GMT 2021 by alunm
+\end{tla}
+\begin{tlatex}
+\@x{}\moduleLeftDash\@xx{ {\MODULE} Firewall}\moduleRightDash\@xx{}%
+\@x{ {\EXTENDS} Naturals}%
+\@x{ {\CONSTANT} AcceptList ,\,}%
+\@x{\@s{60.21} RejectList ,\,}%
+\@x{\@s{60.21} Protocols ,\,}%
+\@x{\@s{60.21} IPs ,\,}%
+\@x{\@s{60.21} Ports}%
+\@pvspace{8.0pt}%
+\@x{ {\VARIABLE} forwarded}%
+\@y{%
+  packets forwarded on through the firewall
+}%
+\@xx{}%
+\@x{}\midbar\@xx{}%
+\@x{ Address \.{\defeq} [ ip \.{:} IPs ,\, port \.{:} Ports ]}%
+\@y{%
+  address has port and ip
+}%
+\@xx{}%
+\@pvspace{8.0pt}%
+\begin{lcom}{0}%
+\begin{cpar}{0}{F}{F}{0}{0}{}%
+  
+ A Packet has a source and destination address,
+ and a protocol
+ 
+\end{cpar}%
+\end{lcom}%
+\@x{ Packet\@s{4.1} \.{\defeq} [ source \.{:} Address ,\,}%
+\@x{\@s{65.03} dest \.{:} Address ,\,}%
+\@x{\@s{65.03} protocol \.{:} Protocols ]}%
+\@pvspace{8.0pt}%
+\@x{ Rule \.{\defeq} [ Packet \.{\rightarrow} {\BOOLEAN} ]}%
+\@y{%
+  A Rule maps from packets to boolean values
+}%
+\@xx{}%
+\@x{}\midbar\@xx{}%
+\@x{ Init \.{\defeq} forwarded \.{=} \{ \}}%
+\@pvspace{8.0pt}%
+\@x{ Reject ( p ) \.{\defeq}}%
+\@x{\@s{16.4} \E\, rule \.{\in} AcceptList \.{:}}%
+\@x{\@s{29.16} \.{\land} rule [ p ]}%
+\@pvspace{8.0pt}%
+\@x{ Accept ( p ) \.{\defeq}}%
+\@x{\@s{16.4} \E\, rule \.{\in} RejectList \.{:}}%
+\@x{\@s{29.16} \.{\land} rule [ p ]}%
+\@pvspace{8.0pt}%
+\@x{ Firewall ( p ) \.{\defeq}}%
+\@y{%
+  Firewall acts on a packet
+}%
+\@xx{}%
+\@x{\@s{16.4} {\IF} Accept ( p ) \.{\land} {\lnot} Reject ( p )}%
+\@x{\@s{16.4} \.{\THEN} forwarded \.{'} \.{=} forwarded \.{\cup} \{ p \}}%
+\@x{\@s{16.4} \.{\ELSE} {\UNCHANGED} forwarded}%
+\@pvspace{8.0pt}%
+\@x{ Next \.{\defeq}}%
+\@x{\@s{16.4} \E\, packet \.{\in} Packet \.{:} Firewall ( packet )}%
+\@pvspace{8.0pt}%
+\@x{}\bottombar\@xx{}%
+\@x{}%
+\@y{%
+  Modification History
+}%
+\@xx{}%
+\@x{}%
+\@y{%
+  Last modified Tue Feb 16 16:16:29 GMT 2021 by alunm
+}%
+\@xx{}%
+\@x{}%
+\@y{%
+  Created Sat Feb 13 18:27:34 GMT 2021 by alunm
+}%
+\@xx{}%
+\end{tlatex}
+
+\section{The Model}
+
+
+\subsection{Model Overview}
+\paragraph{The Behaviour specification} is an \emph{Initial predicate and
+next-state relation}
+\begin{tla}
+	Init
+	Next
+\end{tla}
+\begin{tlatex}
+\@x{\@s{32.8} Init}%
+\@x{\@s{32.8} Next}%
+\end{tlatex}
+
+\paragraph{The Model} Is quite complex due to the nature of the problem and
+the data required.
+\subparagraph{Declared constants} the constants in the specification are
+declared as follows.
+\begin{description}
+\item[Accept list] A list of functions that match packets
+\begin{tla}
+AcceptList <- {
+	[p \in Packet |-> p.protocol = "http"],
+	[p \in Packet |-> p.dest.port = 4],
+	[p \in Packet |-> p.source.ip \in 1..3]
+}
+\end{tla}
+\begin{tlatex}
+\@x{ AcceptList \.{\leftarrow} \{}%
+ \@x{\@s{32.8} [ p \.{\in} Packet \.{\mapsto} p . protocol \.{=}\@w{http} ]
+ ,\,}%
+ \@x{\@s{32.8} [ p \.{\in} Packet \.{\mapsto} p . dest . port\@s{0.24} \.{=} 4
+ ] ,\,}%
+ \@x{\@s{32.8} [ p \.{\in} Packet \.{\mapsto} p . source . ip \.{\in} 1
+ \.{\dotdot} 3 ]}%
+\@x{ \}}%
+\end{tlatex}
+\item[RejectList] is the list of rules to match rejected packets.
+\begin{tla}
+RejectList <- {}
+\end{tla}
+\begin{tlatex}
+\@x{ RejectList \.{\leftarrow} \{ \}}%
+\end{tlatex}
+\item[Protocols] A set of strings of protocol names to match.
+\begin{tla}
+Protocols <- {"http","smtp","ftp"}
+\end{tla}
+\begin{tlatex}
+\@x{ Protocols \.{\leftarrow} \{\@w{http} ,\,\@w{smtp} ,\,\@w{ftp} \}}%
+\end{tlatex}
+\item[Ports] The range of ports in use
+\begin{tla}
+Ports <- 1..5
+\end{tla}
+\begin{tlatex}
+\@x{ Ports \.{\leftarrow} 1 \.{\dotdot} 5}%
+\end{tlatex}
+
+\item[IPs] The range if IP addresses to use
+\begin{tla}
+IPs <- 1..10
+\end{tla}
+\begin{tlatex}
+\@x{ IPs \.{\leftarrow} 1 \.{\dotdot} 10}%
+\end{tlatex}
+
+\end{description}
+
+\subsection{Checks and verifications}
+The invariant is checked to see if all the packets that have been forwarded
+are either accepted or not expicitly rejected.
+\begin{tla}
+	\A p \in forwarded : Accept(p) /\ \lnot Reject(p)
+\end{tla}
+\begin{tlatex}
+ \@x{\@s{32.8} \A\, p \.{\in} forwarded \.{:} Accept ( p ) \.{\land} {\lnot}
+ Reject ( p )}%
+\end{tlatex}
+
+\subsection{Results} A summary of the results
+\paragraph{Statistics} a summaries of the actions and number of states
+found.
+
+\begin{table}[h]
+\begin{tabular}{lr}
+	States found & \num{7501} \\
+ Distinct states & \num{1} \\ 
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\begin{tabular}{llrr}
+	\textbf{Action} & Location & States Found & \textbf{Distinct states} \\
+	\hline
+	\textit{Init}   & Line 23 & 1 & 1 \\
+	\textit{Firewall}   & Line 33 & \num{7500} & 0 \\
+\end{tabular}
+\end{table}
+
+\subsection{Discussion}
+\subsubsection{Model description} 
+This is a complex model.  In this case we have to model and specify the
+environment in which the specification operates.
+
+\paragraph{The state of the system is\ldots}
+The state of the firewall is just the contents of the ACL, packets coming
+into the firewall are not really part of the firewall state, but are part of
+the environment state in which the firewall operates.
+The \emph{forwarded} and \emph{declined} variables model this state of the
+environment.
+
+\paragraph{Rules}  The firewall uses rules to check packets and accept or
+reject them if they match.  A rule can be thought of as a predicate function
+on the packets, i.e. it is a function that maps from packets to a boolean
+value.
+
+It's type is therefore:
+\begin{tla}
+	Rule == [ Packet -> BOOLEAN ]
+\end{tla}
+\begin{tlatex}
+\@x{\@s{32.8} Rule \.{\defeq} [ Packet \.{\rightarrow} {\BOOLEAN} ]}%
+\end{tlatex}
+
+The accept-list and reject-list are simply sets of rules.
+
+\paragraph{ACL} The access control list is a set of accepting and rejecting
+rules.  These are constants from the model.  This could be a variable and
+managed by operations, but it adds nothing to the firewall behaviour. 
+
+\paragraph{Accept and Reject rules} A packet is accepted (or rejected) if
+there is a rule that matches the packet, in other words
+\begin{tla}
+	\E rule \in AcceptList : rule[p]
+\end{tla}
+\begin{tlatex}
+\@x{\@s{32.8} \E\, rule \.{\in} AcceptList \.{:} rule [ p ]}%
+\end{tlatex}
+This is true, if there is a rule that is true, and a rule is true if it
+matches a packet.
+A rule might be:
+\begin{tla}
+	[ p \in Packet |-> p.dest.port = 8080 ]
+\end{tla}
+\begin{tlatex}
+\@x{\@s{32.8} [ p \.{\in} Packet \.{\mapsto} p . dest . port \.{=} 8080 ]}%
+\end{tlatex}
+Which is true if the port field of the dest field in the packet record is
+8080, and false otherwise.
+
+\paragraph{Firewall Action}
+The action of the fire wall is to forward a packet if it is in the accept list
+and not matched by a reject rule.
+\begin{tla}
+Firewall(p) == \* Firewall acts on a packet
+    IF Accept(p)/\\lnot Reject(p)
+    THEN forwarded' = forwarded \union {p}
+    ELSE UNCHANGED forwarded
+\end{tla}
+\begin{tlatex}
+\@x{ Firewall ( p ) \.{\defeq}}%
+\@y{%
+  Firewall acts on a packet
+}%
+\@xx{}%
+\@x{\@s{16.4} {\IF} Accept ( p ) \.{\land} {\lnot} Reject ( p )}%
+\@x{\@s{16.4} \.{\THEN} forwarded \.{'} \.{=} forwarded \.{\cup} \{ p \}}%
+\@x{\@s{16.4} \.{\ELSE} {\UNCHANGED} forwarded}%
+\end{tlatex}
+
+\paragraph{Next action}
+The next action is that there is a packet that can be forwarded.
+\begin{tla}
+Next ==
+    \E packet \in Packet : Firewall(packet)
+\end{tla}
+\begin{tlatex}
+\@x{ Next \.{\defeq}}%
+\@x{\@s{16.4} \E\, packet \.{\in} Packet \.{:} Firewall ( packet )}%
+\end{tlatex}
+
+
+\subsubsection{Interpretation of results}
+This is an interesting case in that the firewall itself has no state, all the
+states come from the environment, packets received, forwarded and rejected.
+It is another system where care is needed in determining the size of the model
+and consequently the size of the state-space.
+
+\end{document}
+
+\endinput
+%%
+%% End of file `assignment-template.tex'.

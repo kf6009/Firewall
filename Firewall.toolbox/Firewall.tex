@@ -943,7 +943,9 @@
 \@x{ {\EXTENDS} Naturals}%
 \@x{ {\CONSTANT} AcceptList ,\,}%
 \@x{\@s{50.17} RejectList ,\,}%
-\@x{\@s{50.17} Protocols}%
+\@x{\@s{50.17} Protocols ,\,}%
+\@x{\@s{50.17} IPs ,\,}%
+\@x{\@s{50.17} Ports}%
 \@pvspace{8.0pt}%
 \@x{ {\VARIABLE} forwarded}%
 \@y{\@s{0}%
@@ -951,7 +953,7 @@
 }%
 \@xx{}%
 \@x{}\midbar\@xx{}%
-\@x{ Address \.{\defeq} [ ip \.{:} Nat ,\, port \.{:} Nat ]}%
+\@x{ Address \.{\defeq} [ ip \.{:} IPs ,\, port \.{:} Ports ]}%
 \@y{\@s{0}%
  address has port and \ensuremath{ip
 }}%
@@ -973,23 +975,28 @@ A \ensuremath{Packet} has a source and destination address,
 }%
 \@xx{}%
 \@x{}\midbar\@xx{}%
-\@x{ Init \.{\defeq}}%
-\@x{\@s{16.4} \.{\land} forwarded \.{=} \{ \}}%
+\@x{ Init \.{\defeq} forwarded \.{=} \{ \}}%
 \@pvspace{8.0pt}%
 \@x{ Reject ( p ) \.{\defeq}}%
-\@x{\@s{16.4} \E\, rule \.{\in} AcceptList \.{:}}%
+\@x{\@s{16.4} \E\, rule \.{\in} RejectList\@s{8.2} \.{:}}%
 \@x{\@s{27.72} \.{\land} rule [ p ]}%
-\@x{\@s{27.72} \.{\land} forwarded \.{'} \.{=} forwarded \.{\cup} \{ p \}}%
 \@pvspace{8.0pt}%
 \@x{ Accept ( p ) \.{\defeq}}%
-\@x{\@s{16.4} \E\, rule \.{\in} RejectList \.{:}}%
+\@x{\@s{16.4} \E\, rule \.{\in} AcceptList \.{:}}%
 \@x{\@s{27.72} \.{\land} rule [ p ]}%
-\@x{\@s{27.72} \.{\land} {\UNCHANGED} forwarded}%
+\@pvspace{8.0pt}%
+\@x{ Firewall ( p ) \.{\defeq}}%
+\@y{\@s{0}%
+ Firewall acts on a packet
+}%
+\@xx{}%
+\@x{\@s{16.4} {\IF} Accept ( p ) \.{\land} {\lnot} Reject ( p )}%
+\@x{\@s{16.4} \.{\THEN} forwarded \.{'} \.{=} forwarded \.{\cup} \{ p \}}%
+\@x{\@s{16.4} \.{\ELSE} {\UNCHANGED} forwarded}%
 \@pvspace{8.0pt}%
 \@x{ Next \.{\defeq}}%
-\@x{\@s{16.4} \E\, packet \.{\in} Packet \.{:}}%
-\@x{\@s{27.72} \.{\lor} Reject ( packet )}%
-\@x{\@s{27.72} \.{\lor} Accept ( packet )}%
+\@x{\@s{16.4} \E\, packet \.{\in} Packet \.{:} Firewall ( packet )}%
+\@pvspace{8.0pt}%
 \@x{}\bottombar\@xx{}%
 \setboolean{shading}{false}
 \begin{lcom}{0}%
@@ -997,8 +1004,8 @@ A \ensuremath{Packet} has a source and destination address,
 \ensuremath{\.{\,\backslash\,}}* Modification History
 \end{cpar}%
 \begin{cpar}{0}{F}{F}{0}{0}{}%
- \ensuremath{\.{\,\backslash\,}}* Last modified \ensuremath{Tue}
- \ensuremath{Feb} 16 12:22:12 \ensuremath{GMT} 2021 by \ensuremath{alunm
+ \ensuremath{\.{\,\backslash\,}}* Last modified \ensuremath{Wed}
+ \ensuremath{Feb} 17 10:17:27 \ensuremath{GMT} 2021 by \ensuremath{alunm
 }%
 \end{cpar}%
 \begin{cpar}{0}{F}{F}{0}{0}{}%

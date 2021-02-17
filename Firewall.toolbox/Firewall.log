@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.16)  16 FEB 2021 12:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.10.16)  17 FEB 2021 10:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -115,9 +115,9 @@ LaTeX Font Info:    Trying to load font information for U+lasy on input line 94
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 957.
+(Font)              <8> on input line 959.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 957.
+(Font)              <6> on input line 959.
 [1
 
 {/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./Fire
@@ -125,7 +125,7 @@ wall.aux) )
 Here is how much of TeX's memory you used:
  1277 strings out of 479917
  17767 string characters out of 5882711
- 297262 words of memory out of 5000000
+ 298262 words of memory out of 5000000
  17891 multiletter control sequences out of 15000+600000
  539953 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -140,7 +140,7 @@ b></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 /usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></u
 sr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></us
 r/local/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmti8.pfb>
-Output written on Firewall.pdf (1 page, 100094 bytes).
+Output written on Firewall.pdf (1 page, 100862 bytes).
 PDF statistics:
  48 PDF objects out of 1000 (max. 8388607)
  34 compressed objects within 1 object stream

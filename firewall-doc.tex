@@ -50,11 +50,11 @@ Rule == [ Packet -> BOOLEAN ] \* A Rule maps from packets to boolean values
 Init == forwarded = {}
 
 Reject(p) ==
-    \E rule \in AcceptList :
+    \E rule \in RejectList :
         /\ rule[p]
 
 Accept(p) ==
-    \E rule \in RejectList :
+    \E rule \in AcceptList :
         /\ rule[p]
 
 Firewall(p) == \* Firewall acts on a packet
@@ -112,11 +112,11 @@ Next ==
 \@x{ Init \.{\defeq} forwarded \.{=} \{ \}}%
 \@pvspace{8.0pt}%
 \@x{ Reject ( p ) \.{\defeq}}%
-\@x{\@s{16.4} \E\, rule \.{\in} AcceptList \.{:}}%
+\@x{\@s{16.4} \E\, rule \.{\in} RejectList \.{:}}%
 \@x{\@s{29.16} \.{\land} rule [ p ]}%
 \@pvspace{8.0pt}%
 \@x{ Accept ( p ) \.{\defeq}}%
-\@x{\@s{16.4} \E\, rule \.{\in} RejectList \.{:}}%
+\@x{\@s{16.4} \E\, rule \.{\in} AcceptList \.{:}}%
 \@x{\@s{29.16} \.{\land} rule [ p ]}%
 \@pvspace{8.0pt}%
 \@x{ Firewall ( p ) \.{\defeq}}%

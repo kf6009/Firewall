@@ -23,22 +23,22 @@ Rule == [ Packet -> BOOLEAN ] \* A Rule maps from packets to boolean values
 Init == forwarded = {}
 
 Reject(p) ==
-    \E rule \in AcceptList :
+    \E rule \in RejectList   :
         /\ rule[p]
 
 Accept(p) ==
-    \E rule \in RejectList :
+    \E rule \in AcceptList :
         /\ rule[p]
 
 Firewall(p) == \* Firewall acts on a packet
     IF Accept(p)/\\lnot Reject(p) 
     THEN forwarded' = forwarded \union {p}
     ELSE UNCHANGED forwarded
-    
+
 Next ==
     \E packet \in Packet : Firewall(packet)
 
 =============================================================================
 \* Modification History
-\* Last modified Tue Feb 16 16:16:29 GMT 2021 by alunm
+\* Last modified Wed Feb 17 10:17:27 GMT 2021 by alunm
 \* Created Sat Feb 13 18:27:34 GMT 2021 by alunm
